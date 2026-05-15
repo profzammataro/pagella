@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>📋 La Mia Pagella</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Special+Elite&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fdf6e3;
+  --paper: #fef9f0;
+  --ink: #1a1a2e;
+  --red-pen: #c0392b;
+  --blue-pen: #1a5276;
+  --green-stamp: #1e8449;
+  --gold: #d4ac0d;
+  --stamp-red: #e74c3c;
+  --line: #d4c5a9;
+  --shadow: rgba(0,0,0,0.12);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #2c3e50;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px);
+  min-height: 100vh;
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 40px;
+}
+
+/* ── HEADER ── */
+.app-header {
+  text-align: center;
+  margin-bottom: 24px;
+  animation: dropIn 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes dropIn {
+  from { opacity:0; transform: translateY(-30px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.app-title {
+  font-family: 'Special Elite', serif;
+  font-size: 2.2rem;
+  color: var(--cream);
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+}
+.app-subtitle {
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  color: #aab7c4;
+  margin-top: 4px;
+}
+
+/* ── FOGLIO ── */
+.sheet {
+  background: var(--paper);
+  width: 100%;
+  max-width: 440px;
+  border-radius: 4px;
+  box-shadow:
+    4px 4px 0 #1a252f,
+    0 20px 60px rgba(0,0,0,0.4),
+    inset 0 0 0 1px rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+  animation: slideUp 0.5s ease 0.1s both;
+}
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Bordo rosso classico pagella */
+.sheet::before {
+  content:'';
+  position:absolute;
+  inset:8px;
+  border: 2px solid var(--red-pen);
+  border-radius: 2px;
+  pointer-events:none;
+  z-index:1;
+  opacity:0.4;
+}
+
+/* Fori laterali */
+.hole {
+  position:absolute;
+  left: 18px;
+  width: 14px; height: 14px;
+  background: #2c3e50;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+  z-index:2;
+}
+.hole:nth-child(1) { top: 60px; }
+.hole:nth-child(2) { top: 50%; }
+.hole:nth-child(3) { bottom: 60px; }
+
+.sheet-inner {
+  padding: 20px 20px 20px 44px;
+}
+
+/* ── INTESTAZIONE PAGELLA ── */
+.school-header {
+  text-align: center;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 16px;
+}
+.school-name {
+  font-family: 'Special Elite', serif;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.6;
+}
+.doc-title {
+  font-family: 'Special Elite', serif;
+  font-size: 1.5rem;
+  color: var(--ink);
+  letter-spacing: 1px;
+  margin: 4px 0;
+}
+.doc-subtitle {
+  font-family: 'Caveat', cursive;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* ── NOME STUDENTE ── */
+.student-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.student-label {
+  font-family: 'Special Elite', serif;
+  font-size: 0.8rem;
+  color: var(--ink);
+  opacity:0.7;
+  white-space: nowrap;
+  flex-shrink:0;
+}
+.student-name-input {
+  flex:1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--blue-pen);
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  color: var(--blue-pen);
+  outline: none;
+  padding: 2px 4px;
+  width: 100%;
+}
+.student-name-input::placeholder { color: #aaa; font-size:1rem; }
+
+/* ── MATERIE ── */
+.subjects-title {
+  font-family: 'Special Elite', serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity:0.5;
+  margin-bottom: 10px;
+}
+
+.subject-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+.subject-name {
+  flex:1;
+  font-family: 'Special Elite', serif;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+.vote-input {
+  width: 42px;
+  height: 32px;
+  background: transparent;
+  border: 1px dashed var(--red-pen);
+  border-radius: 4px;
+  text-align: center;
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  color: var(--red-pen);
+  font-weight: 700;
+  outline: none;
+  transition: background 0.2s;
+}
+.vote-input:focus {
+  background: rgba(192,57,43,0.05);
+  border-style: solid;
+}
+.vote-input::placeholder { color: #ccc; font-size:0.9rem; }
+
+/* Emoji voto in tempo reale */
+.vote-emoji {
+  width: 22px;
+  text-align: center;
+  font-size: 1rem;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.vote-emoji.pop { transform: scale(1.5); }
+
+/* ── MEDIA ── */
+.media-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0 0;
+  padding: 10px 12px;
+  background: rgba(26,26,46,0.04);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+}
+.media-label {
+  font-family: 'Special Elite', serif;
+  font-size: 0.85rem;
+  color: var(--ink);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.media-value {
+  font-family: 'Caveat', cursive;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--red-pen);
+  min-width: 60px;
+  text-align: right;
+}
+
+/* ── PULSANTE ── */
+.btn-genera {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  border-radius: 2px;
+  font-family: 'Special Elite', serif;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-genera:hover { background: #2c3e50; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.btn-genera:active { transform: translateY(0); }
+.btn-genera:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-genera .loading-dots { display:none; }
+.btn-genera.loading .btn-text { display:none; }
+.btn-genera.loading .loading-dots { display:inline; }
+
+/* ── RISULTATO ── */
+.risultato-sheet {
+  background: var(--paper);
+  width: 100%;
+  max-width: 440px;
+  border-radius: 4px;
+  box-shadow:
+    4px 4px 0 #1a252f,
+    0 20px 60px rgba(0,0,0,0.4);
+  margin-top: 20px;
+  display: none;
+  animation: revealResult 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  overflow: hidden;
+}
+.risultato-sheet.visible { display: block; }
+
+@keyframes revealResult {
+  from { opacity:0; transform: scale(0.9) translateY(20px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+
+/* Timbro rotondo */
+.stamp {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 80px; height: 80px;
+  border: 3px solid var(--stamp-red);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-12deg);
+  opacity: 0.85;
+  z-index:3;
+}
+.stamp-text {
+  font-family: 'Special Elite', serif;
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--stamp-red);
+  text-align: center;
+  line-height: 1.2;
+}
+.stamp-score {
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--stamp-red);
+  line-height:1;
+}
+
+.risultato-inner {
+  padding: 20px 20px 20px 44px;
+  position: relative;
+}
+
+/* Fori anche nel risultato */
+.hole-r {
+  position:absolute;
+  left: 18px;
+  width: 14px; height: 14px;
+  background: #2c3e50;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+.hole-r:nth-child(1) { top: 50px; }
+.hole-r:nth-child(2) { bottom: 50px; }
+
+.risultato-header {
+  font-family: 'Special Elite', serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity:0.5;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Commento del prof */
+.sezione-commento {
+  margin-bottom: 16px;
+}
+.sezione-label {
+  font-family: 'Special Elite', serif;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--blue-pen);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sezione-label::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: var(--blue-pen);
+  opacity:0.3;
+}
+.commento-text {
+  font-family: 'Caveat', cursive;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--blue-pen);
+  padding: 10px;
+  background: rgba(26,82,118,0.04);
+  border-left: 3px solid var(--blue-pen);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Profezia */
+.sezione-profezia {
+  margin-bottom: 16px;
+}
+.profezia-text {
+  font-family: 'Caveat', cursive;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--green-stamp);
+  padding: 10px;
+  background: rgba(30,132,73,0.04);
+  border-left: 3px solid var(--green-stamp);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Titolo studente */
+.titolo-studente {
+  text-align: center;
+  margin: 16px 0;
+  padding: 10px;
+  border: 2px dashed var(--gold);
+  border-radius: 4px;
+  background: rgba(212,172,13,0.06);
+}
+.titolo-label {
+  font-family: 'Special Elite', serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity:0.8;
+  margin-bottom: 4px;
+}
+.titolo-value {
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* Firma */
+.firma-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.firma-label {
+  font-family: 'Special Elite', serif;
+  font-size: 0.7rem;
+  color: var(--ink);
+  opacity:0.5;
+  letter-spacing:1px;
+}
+.firma-value {
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 0 8px 2px;
+}
+
+/* Azioni */
+.azioni {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 0 0 4px;
+}
+.btn-azione {
+  flex:1;
+  padding: 12px 8px;
+  border-radius: 2px;
+  border: none;
+  font-family: 'Special Elite', serif;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-azione:hover { transform: translateY(-1px); }
+.btn-condividi { background: var(--ink); color: var(--cream); }
+.btn-ricomincia { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+
+/* Linee sfondo foglio */
+.sheet-inner, .risultato-inner {
+  background-image: repeating-linear-gradient(
+    transparent, transparent 27px,
+    var(--line) 27px, var(--line) 28px
+  );
+  background-position: 0 36px;
+}
+
+/* Errore */
+.error-box {
+  background: rgba(192,57,43,0.08);
+  border: 1px solid var(--red-pen);
+  border-radius: 4px;
+  padding: 12px;
+  font-family: 'Caveat', cursive;
+  color: var(--red-pen);
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 12px;
+  display: none;
+}
+.error-box.visible { display: block; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-title">📋 La Mia Pagella</div>
+  <div class="app-subtitle">Inserisci i voti — l'AI fa il resto</div>
+</div>
+
+<!-- FOGLIO INPUT -->
+<div class="sheet">
+  <div class="hole"></div>
+  <div class="hole"></div>
+  <div class="hole"></div>
+  <div class="sheet-inner">
+    <div class="school-header">
+      <div class="school-name">Ministero dell'Istruzione</div>
+      <div class="doc-title">DOCUMENTO DI VALUTAZIONE</div>
+      <div class="doc-subtitle">Anno Scolastico 2025/2026 — Liceo</div>
+    </div>
+
+    <div class="student-row">
+      <span class="student-label">Alunno/a:</span>
+      <input type="text" class="student-name-input" id="student-name" placeholder="il tuo nome..." maxlength="24">
+    </div>
+
+    <div class="subjects-title">Valutazioni disciplinari</div>
+
+    <div id="subjects-container">
+      <!-- generato da JS -->
+    </div>
+
+    <div class="media-row">
+      <span class="media-label">Media voti</span>
+      <span class="media-value" id="media-display">—</span>
+    </div>
+
+    <button class="btn-genera" id="btn-genera" onclick="generaAnalisi()">
+      <span class="btn-text">✦ Genera Analisi ✦</span>
+      <span class="loading-dots">⏳ L'AI ci pensa...</span>
+    </button>
+    <div class="error-box" id="error-box">Inserisci il tuo nome e almeno 3 voti!</div>
+  </div>
+</div>
+
+<!-- FOGLIO RISULTATO -->
+<div class="risultato-sheet" id="risultato-sheet">
+  <div class="hole-r"></div>
+  <div class="hole-r"></div>
+
+  <div class="stamp">
+    <div class="stamp-text">ANALISI<br>AI</div>
+    <div class="stamp-score" id="stamp-score">—</div>
+    <div class="stamp-text">SALENDO<br>DI LIVELLO</div>
+  </div>
+
+  <div class="risultato-inner">
+    <div class="risultato-header">Valutazione dell'Intelligenza Artificiale</div>
+
+    <div class="titolo-studente">
+      <div class="titolo-label">Titolo onorifico</div>
+      <div class="titolo-value" id="titolo-value">—</div>
+    </div>
+
+    <div class="sezione-commento">
+      <div class="sezione-label">📝 Commento del Professore AI</div>
+      <div class="commento-text" id="commento-text">—</div>
+    </div>
+
+    <div class="sezione-profezia">
+      <div class="sezione-label" style="color:var(--green-stamp)">🔮 Profezia sul tuo futuro</div>
+      <div class="profezia-text" id="profezia-text">—</div>
+    </div>
+
+    <div class="firma-row">
+      <span class="firma-label">Firmato:</span>
+      <span class="firma-value">Prof. AI Sapientone</span>
+    </div>
+
+    <div class="azioni">
+      <button class="btn-azione btn-condividi" onclick="condividi()">📤 Condividi</button>
+      <button class="btn-azione btn-ricomincia" onclick="ricomincia()">🔄 Riprova</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MATERIE = [
+  "Italiano", "Latino", "Matematica", "Fisica",
+  "Storia", "Filosofia", "Inglese", "Scienze", "Arte"
+];
+
+const VOTE_EMOJI = v => {
+  if (!v) return '';
+  if (v <= 3) return '💀';
+  if (v <= 4) return '😱';
+  if (v == 5) return '😬';
+  if (v == 6) return '😐';
+  if (v == 7) return '🙂';
+  if (v == 8) return '😊';
+  if (v == 9) return '😎';
+  return '🏆';
+};
+
+// Costruisco le righe materie
+function buildSubjects() {
+  const container = document.getElementById('subjects-container');
+  container.innerHTML = MATERIE.map((m, i) => `
+    <div class="subject-row">
+      <span class="subject-name">${m}</span>
+      <span class="vote-emoji" id="emoji-${i}"></span>
+      <input type="number" class="vote-input" id="vote-${i}"
+        min="1" max="10" placeholder="—"
+        oninput="onVoteChange(${i}, this.value)"
+        onwheel="this.blur()">
+    </div>
+  `).join('');
+}
+
+function onVoteChange(idx, raw) {
+  let v = parseInt(raw);
+  if (v < 1) v = 1;
+  if (v > 10) v = 10;
+  if (!isNaN(v)) document.getElementById(`vote-${idx}`).value = v;
+
+  const emojiEl = document.getElementById(`emoji-${idx}`);
+  const e = VOTE_EMOJI(isNaN(v) ? null : v);
+  emojiEl.textContent = e;
+  emojiEl.classList.remove('pop');
+  void emojiEl.offsetWidth;
+  emojiEl.classList.add('pop');
+
+  updateMedia();
+}
+
+function updateMedia() {
+  const votes = getVotes();
+  if (!votes.length) { document.getElementById('media-display').textContent = '—'; return; }
+  const avg = votes.reduce((a,b) => a+b, 0) / votes.length;
+  document.getElementById('media-display').textContent = avg.toFixed(1);
+}
+
+function getVotes() {
+  return MATERIE.map((_, i) => {
+    const v = parseInt(document.getElementById(`vote-${i}`).value);
+    return isNaN(v) ? null : v;
+  }).filter(v => v !== null);
+}
+
+function getVoteMap() {
+  return MATERIE.map((m, i) => {
+    const v = parseInt(document.getElementById(`vote-${i}`).value);
+    return isNaN(v) ? null : { materia: m, voto: v };
+  }).filter(v => v !== null);
+}
+
+// ── GENERA ANALISI ──────────────────────────────────────────────────────────
+async function generaAnalisi() {
+  const name = document.getElementById('student-name').value.trim();
+  const voteMap = getVoteMap();
+  const errBox = document.getElementById('error-box');
+
+  if (!name || voteMap.length < 3) {
+    errBox.classList.add('visible');
+    setTimeout(() => errBox.classList.remove('visible'), 3000);
+    return;
+  }
+
+  const btn = document.getElementById('btn-genera');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  document.getElementById('risultato-sheet').classList.remove('visible');
+
+  const avg = (voteMap.reduce((a,b) => a + b.voto, 0) / voteMap.length).toFixed(1);
+  const votiStr = voteMap.map(v => `${v.materia}: ${v.voto}`).join(', ');
+
+  const prompt = `Sei un professore italiano esilarante, sarcastico e con un cuore d'oro. 
+Analizza questa pagella di liceo dello studente "${name}":
+${votiStr}
+Media: ${avg}
+
+Rispondi SOLO in JSON valido, nessun testo fuori, nessun backtick:
+{
+  "titolo": "titolo onorifico divertente (es. 'Il Sopravvissuto alla Matematica', 'La Regina del Minimo Indispensabile'...)",
+  "commento": "commento del professore: 3-4 frasi esilaranti e sarcastiche ma affettuose, riferendo materie specifiche con i voti peggiori e migliori. Parla direttamente a ${name}.",
+  "profezia": "profezia sul futuro: 3-4 frasi creative e divertenti su cosa farà nella vita basandoti sui voti. Sii creativo e surreale ma plausibile."
+}`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content[0].text.trim().replace(/```json|```/g, '');
+    const result = JSON.parse(text);
+
+    document.getElementById('titolo-value').textContent = result.titolo;
+    document.getElementById('commento-text').textContent = result.commento;
+    document.getElementById('profezia-text').textContent = result.profezia;
+    document.getElementById('stamp-score').textContent = avg;
+
+    document.getElementById('risultato-sheet').classList.add('visible');
+    document.getElementById('risultato-sheet').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch(e) {
+    console.error(e);
+    // Fallback offline divertente
+    const avg_n = parseFloat(avg);
+    const titoli = avg_n >= 8 ? "Il Genio Incompreso dal Mondo" :
+                   avg_n >= 7 ? "Il Campione del Sufficiente+" :
+                   avg_n >= 6 ? "Il Maestro del Pelo nell'Uovo" :
+                   avg_n >= 5 ? "Il Guerriero della Sopravvivenza" :
+                                "La Leggenda Vivente del Recupero";
+    const commenti = avg_n >= 7
+      ? `Caro ${name}, con una media del ${avg} potresti quasi permetterti di essere arrogante. Quasi. C'è ancora margine di miglioramento, e lo sai bene anche tu. Continua così e magari un giorno capirai perché esistono i compiti a casa.`
+      : avg_n >= 6
+      ? `${name}, il sei è una filosofia di vita, non un fallimento. Riesci a navigare il mare della scuola senza affondate, ma anche senza mai arrivare davvero in porto. Un'impresa, a modo suo.`
+      : `Caro ${name}, la tua pagella è una vera opera d'arte dell'arrangiarsi. Con ${avg} di media hai dimostrato che i limiti sono solo nella mente... ma qualcuno dovrebbe dirlo anche ai professori.`;
+    const profezie = avg_n >= 7
+      ? `${name} diventerà un professionista di successo che guarderà i vecchi voti con nostalgia. Probabilmente finirà a fare il capo di qualcuno che prendeva 10.`
+      : `${name} aprirà una start-up rivoluzionaria che non ha niente a che fare con le materie scolastiche. Il business plan sarà scritto su un foglietto di matematica rimasto in bianco.`;
+
+    document.getElementById('titolo-value').textContent = titoli;
+    document.getElementById('commento-text').textContent = commenti;
+    document.getElementById('profezia-text').textContent = profezie;
+    document.getElementById('stamp-score').textContent = avg;
+    document.getElementById('risultato-sheet').classList.add('visible');
+    document.getElementById('risultato-sheet').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  btn.classList.remove('loading');
+  btn.disabled = false;
+}
+
+// ── CONDIVIDI ──────────────────────────────────────────────────────────────
+function condividi() {
+  const name = document.getElementById('student-name').value.trim();
+  const avg = document.getElementById('stamp-score').textContent;
+  const titolo = document.getElementById('titolo-value').textContent;
+  const profezia = document.getElementById('profezia-text').textContent;
+
+  const text = `📋 LA MIA PAGELLA AI\n\n👤 ${name}\n⭐ Media: ${avg}\n🏅 Titolo: "${titolo}"\n\n🔮 Profezia: ${profezia.substring(0,120)}...\n\n👉 Prova anche tu su Salendo di Livello!`;
+
+  if (navigator.share) {
+    navigator.share({ title: 'La Mia Pagella AI', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('📋 Copiato! Incollalo dove vuoi 😄'));
+  }
+}
+
+function ricomincia() {
+  document.getElementById('risultato-sheet').classList.remove('visible');
+  document.getElementById('student-name').value = '';
+  MATERIE.forEach((_, i) => {
+    document.getElementById(`vote-${i}`).value = '';
+    document.getElementById(`emoji-${i}`).textContent = '';
+  });
+  document.getElementById('media-display').textContent = '—';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildSubjects();
+</script>
+</body>
+</html>
